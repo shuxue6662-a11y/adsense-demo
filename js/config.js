@@ -4,13 +4,13 @@ const CONFIG = {
     // Coze API配置
     COZE: {
         API_URL: 'https://api.coze.cn/v3/chat',
-        API_KEY: '', // 在这里填入你的Coze API Key
-        BOT_ID: '',  // 在这里填入你的Bot ID
+        API_KEY: 'pat_3rC7k0AAV8jncyGqXreiwD66if5TYDoLZZUwVgkFANI5VpFEAXQHHEGCNwmX90F5', // 在这里填入你的Coze API Key
+        BOT_ID: 'AdSense感知广告引擎',  // 在这里填入你的Bot ID
         USER_ID: 'demo_user_' + Date.now()
     },
     
     // 是否启用真实API（false时使用预设回答）
-    USE_REAL_API: false,
+    USE_REAL_API: true,
     
     // 预设回答库（API失败时的降级方案）
     FALLBACK_RESPONSES: {
