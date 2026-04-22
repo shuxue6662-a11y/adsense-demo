@@ -4,20 +4,64 @@
  * 页面加载完成后初始化
  */
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('%c AdSense Demo 初始化中... ', 'background: #00a870; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold;');
+    console.log('AdSense Demo 初始化中...');
     
-    // 初始化各个控制器
+    // 初始化视频播放器（新增）
+    videoPlayer.init();
+    
+    // 初始化其他控制器
     modeController.init();
     uiController.init();
     
-    // 添加欢迎提示
+    // 健康检查后端
+    checkBackendHealth();
+    
+    initDashboard();
     showWelcomeToast();
     
-    // 初始化数据仪表板
-    initDashboard();
-    
-    console.log('%c 初始化完成！', 'background: #44bb44; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold;');
+    console.log('初始化完成！');
 });
+
+
+// 新增：检查后端健康状态
+async function checkBackendHealth() {
+    try {
+        const health = await videoAPI.healthCheck();
+        console.log('[Backend] 健康检查:', health);
+        
+        if (health.status !== 'ok') {
+            showBackendWarning();
+        }
+    } catch (error) {
+        console.error('[Backend] 无法连接:', error);
+        showBackendWarning();
+    }
+}
+
+
+// 新增：显示后端警告
+function showBackendWarning() {
+    const warning = document.createElement('div');
+    warning.innerHTML = `
+        <div style="
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff4444;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            z-index: 10000;
+            box-shadow: 0 8px 32px rgba(255, 68, 68, 0.5);
+        ">
+            <i class="bi bi-exclamation-triangle"></i>
+            后端服务未启动，请先运行 <code>python backend/app.py</code>
+        </div>
+    `;
+    document.body.appendChild(warning);
+}
+
 
 /**
  * 切换模式（全局函数，供HTML调用）
@@ -33,14 +77,16 @@ function switchMode(mode) {
  * @param {string} sceneId - 场景ID
  */
 function switchScene(sceneId) {
+    console.log('[Main] 切换场景:', sceneId);
+    
+    // 使用视频播放器加载（新增）
+    videoPlayer.loadScene(sceneId);
+    
+    // 更新UI
     const scene = SCENES[sceneId];
-    if (!scene) {
-        console.error('场景不存在:', sceneId);
-        return;
+    if (scene) {
+        uiController.updateScene(scene);
     }
-
-    console.log('[Main] 切换场景:', scene.name);
-    uiController.updateScene(scene);
 }
 
 /**

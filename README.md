@@ -1,60 +1,57 @@
-# AdSense·感知广告 - 腾讯视频AI广告引擎
+# AdSense·感知广告 - 完整版
 
-> 基于AI情境感知的智能广告系统，让广告在正确的时刻以正确的方式出现
+> 基于AI视频分析的智能广告引擎
 
-## 📌 项目简介
+## 项目简介
 
-AdSense是参加腾讯PCG AI创造营的参赛作品，旨在用AI改造腾讯视频广告体验。
+AdSense使用AI技术实时分析视频内容的情绪强度，在最佳时机投放最相关的广告，实现用户体验、平台收益、广告主价值的三方平衡。
 
-**核心理念：** 通过多模态AI分析剧情情绪、用户画像和观看场景，在最佳时机投放最相关的广告，实现用户体验、平台收益、广告效果的三方平衡。
+## 技术栈
 
-## 🎯 解决的问题
+- **后端**: Python + Flask + OpenCV + Coze API
+- **前端**: 原生JavaScript + HTML5 + CSS3
+- **AI**: Coze多模态视觉分析
 
-- ❌ 传统广告固定时间插播，打断观看体验
-- ❌ 广告内容与用户无关，转化率低
-- ❌ 用户没有控制权，被迫观看
-- ✅ **AdSense**: 情绪感知 + 精准匹配 + 主动权赋能
+## 快速开始
 
-## ✨ 核心功能
+### 1. 环境要求
 
-1. **情境感知引擎**
-   - 视频内容理解（剧情情绪识别）
-   - 用户行为分析（观看习惯、偏好）
-   - 环境感知（时间、设备、场景）
+- Python 3.8+
+- 现代浏览器（Chrome/Edge/Firefox）
 
-2. **智能决策系统**
-   - 插播时机决策（三区间策略）
-   - 三维精准匹配（时间×用户×内容）
-   - 强化学习优化
-
-3. **用户主动权**
-   - 广告类型自选
-   - 互动减时长
-   - 决策透明化（可询问AI）
-
-## 🚀 快速开始
-
-### 在线体验
-
-👉 **Demo链接**: [https://adsense-demo.vercel.app](https://adsense-demo.vercel.app)
-
-### 本地运行
+### 2. 安装依赖
 
 ```bash
-# 克隆项目
-git clone https://github.com/your-username/adsense-demo.git
+# 后端
+cd backend
+pip install -r requirements.txt
 
-# 进入目录
-cd adsense-demo
+# 前端无需安装（纯静态）
 
-# 使用本地服务器运行（任选其一）
-# 方法1: 使用Python
+### 3. 配置环境变量
+```Bash
+
+cd backend
+cp .env.example .env
+# 编辑.env，填入你的Coze API Key和Bot ID
+
+### 4. 准备视频素材
+将3个30秒MP4视频放到 backend/videos/preset/ 目录：
+
+- scene-high.mp4 - 高潮场景
+- scene-mid.mp4 - 日常场景
+- scene-low.mp4 - 轻松场景
+
+### 5. 启动服务
+```Bash
+
+# 启动后端
+cd backend
+python app.py
+
+# 启动前端（新终端）
+cd frontend
 python -m http.server 8000
 
-# 方法2: 使用Node.js
-npx serve
-
-# 方法3: 使用VS Code的Live Server插件
-# 右键index.html -> Open with Live Server
-
-# 访问 http://localhost:8000
+### 6. 访问Demo
+打开浏览器访问: http://localhost:8000
