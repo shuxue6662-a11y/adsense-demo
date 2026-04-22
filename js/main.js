@@ -1,19 +1,32 @@
-// ==================== 主入口文件 ====================
+// ==================== 主入口文件（优化版）====================
 
 /**
  * 页面加载完成后初始化
  */
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('AdSense Demo 初始化中...');
+    console.log('%c AdSense Demo 初始化中... ', 'background: #00a870; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold;');
     
-    // 初始化UI控制器
+    // 初始化各个控制器
+    modeController.init();
     uiController.init();
     
     // 添加欢迎提示
     showWelcomeToast();
     
-    console.log('初始化完成！');
+    // 初始化数据仪表板
+    initDashboard();
+    
+    console.log('%c 初始化完成！', 'background: #44bb44; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold;');
 });
+
+/**
+ * 切换模式（全局函数，供HTML调用）
+ * @param {string} mode - 'ai' 或 'traditional'
+ */
+function switchMode(mode) {
+    console.log('[Main] 切换模式:', mode);
+    modeController.switchMode(mode);
+}
 
 /**
  * 切换场景（全局函数，供HTML调用）
@@ -26,7 +39,7 @@ function switchScene(sceneId) {
         return;
     }
 
-    console.log('切换场景:', scene.name);
+    console.log('[Main] 切换场景:', scene.name);
     uiController.updateScene(scene);
 }
 
@@ -61,7 +74,7 @@ async function sendMessage() {
         uiController.addChatMessage(reply, true, true);
         
     } catch (error) {
-        console.error('发送消息失败:', error);
+        console.error('[Main] 发送消息失败:', error);
         uiController.addChatMessage(
             '抱歉，我现在遇到了一些问题，请稍后再试。',
             true,
@@ -92,116 +105,298 @@ function handleKeyPress(event) {
     }
 }
 
+// ==================== 数据仪表板功能 ====================
+
 /**
- * 显示信息弹窗（全局函数，供HTML调用）
- * @param {string} type - 信息类型
+ * 初始化数据仪表板
  */
-function showInfo(type) {
-    const modal = document.getElementById('modal');
-    const modalBody = document.getElementById('modalBody');
+function initDashboard() {
+    console.log('[Main] 初始化数据仪表板');
+    // 默认显示用户价值面板
+    switchDashboardTab('user');
+}
+
+/**
+ * 切换仪表板标签页（全局函数，供HTML调用）
+ * @param {string} tab - 'user' | 'platform' | 'advertiser'
+ */
+function switchDashboardTab(tab) {
+    console.log('[Main] 切换仪表板标签:', tab);
     
-    let content = '';
+    // 更新标签按钮状态
+    const tabButtons = document.querySelectorAll('.dashboard-tabs .tab-btn');
+    tabButtons.forEach(btn => {
+        const btnTab = btn.onclick?.toString().match(/switchDashboardTab\('(\w+)'\)/)?.[1];
+        if (btnTab === tab) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
+    // 更新面板显示
+    const panels = {
+        user: document.getElementById('userDashboard'),
+        platform: document.getElementById('platformDashboard'),
+        advertiser: document.getElementById('advertiserDashboard')
+    };
+
+    Object.keys(panels).forEach(key => {
+        if (key === tab) {
+            panels[key].classList.add('active');
+        } else {
+            panels[key].classList.remove('active');
+        }
+    });
+}
+
+/**
+ * 刷新仪表板数据（全局函数，供HTML调用）
+ */
+function refreshDashboard() {
+    console.log('[Main] 刷新仪表板数据');
     
-    if (type === 'tech') {
-        content = `
-            <h2 style="margin-bottom: 20px;">技术架构</h2>
-            <div style="line-height: 1.8;">
-                <h3 style="color: #00a870; margin-top: 20px;">🧠 AI能力层</h3>
-                <ul>
-                    <li><strong>视频内容理解：</strong>调用视觉大模型（GPT-4V/通义千问VL）分析视频帧</li>
-                    <li><strong>情感分析：</strong>基于Transformer的情绪识别模型</li>
-                    <li><strong>对话引擎：</strong>接入Coze大语言模型</li>
-                    <li><strong>推荐算法：</strong>协同过滤 + 深度学习</li>
-                </ul>
-
-                <h3 style="color: #00a870; margin-top: 20px;">⚙️ 决策引擎</h3>
-                <ul>
-                    <li><strong>情绪阈值判断：</strong>三区间策略（安全/谨慎/禁入）</li>
-                    <li><strong>三维匹配：</strong>时间 × 用户 × 内容</li>
-                    <li><strong>强化学习优化：</strong>以完播率+转化率为奖励信号</li>
-                </ul>
-
-                <h3 style="color: #00a870; margin-top: 20px;">🎨 前端技术</h3>
-                <ul>
-                    <li><strong>框架：</strong>原生JavaScript（轻量化）</li>
-                    <li><strong>图表：</strong>Chart.js</li>
-                    <li><strong>样式：</strong>CSS Grid + Flexbox</li>
-                    <li><strong>动画：</strong>CSS Transitions + Keyframes</li>
-                </ul>
-
-                <h3 style="color: #00a870; margin-top: 20px;">☁️ 部署方案</h3>
-                <ul>
-                    <li><strong>主方案：</strong>Vercel（全球CDN加速）</li>
-                    <li><strong>备选：</strong>GitHub Pages</li>
-                    <li><strong>API：</strong>Coze云端API</li>
-                </ul>
-            </div>
-        `;
-    } else if (type === 'about') {
-        content = `
-            <h2 style="margin-bottom: 20px;">关于 AdSense·感知广告</h2>
-            <div style="line-height: 1.8;">
-                <p style="margin-bottom: 15px;">
-                    <strong>AdSense</strong> 是一个基于AI情境感知的智能广告引擎，
-                    旨在解决视频平台广告体验与商业价值之间的矛盾。
-                </p>
-
-                <h3 style="color: #00a870; margin-top: 20px;">💡 核心理念</h3>
-                <p>让广告在<strong>正确的时刻</strong>、以<strong>正确的方式</strong>、
-                触达<strong>正确的用户</strong>。</p>
-
-                <h3 style="color: #00a870; margin-top: 20px;">🎯 解决的问题</h3>
-                <ul>
-                    <li>传统广告固定时间插播，打断观看体验</li>
-                    <li>广告内容与用户无关，转化率低</li>
-                    <li>用户没有控制权，被迫观看</li>
-                    <li>平台收入与用户体验难以平衡</li>
-                </ul>
-
-                <h3 style="color: #00a870; margin-top: 20px;">🏆 核心价值</h3>
-                <ul>
-                    <li><strong>用户：</strong>体验提升65%，控制权增强</li>
-                    <li><strong>平台：</strong>广告完播率提升至75%，收入增长15-20%</li>
-                    <li><strong>广告主：</strong>ROI提升40%，品牌好感度提升</li>
-                </ul>
-
-                <h3 style="color: #00a870; margin-top: 20px;">👨‍💻 作者信息</h3>
-                <p>
-                    参赛赛道：命题赛道 - 用AI改造腾讯视频广告<br>
-                    大赛名称：腾讯PCG AI创造营<br>
-                    创作时间：2024年
-                </p>
-            </div>
-        `;
-    }
+    // 添加刷新动画
+    const refreshBtn = document.querySelector('.refresh-btn');
+    refreshBtn.style.transform = 'rotate(360deg)';
     
-    modalBody.innerHTML = content;
+    setTimeout(() => {
+        refreshBtn.style.transform = 'rotate(0deg)';
+        modeController.showToast('数据已刷新', 'success');
+    }, 600);
+}
+
+// ==================== 用户主动权功能 ====================
+
+/**
+ * 打开广告选择器（全局函数，供HTML调用）
+ */
+function openAdSelector() {
+    console.log('[Main] 打开广告选择器');
+    const modal = document.getElementById('adSelectorModal');
     modal.classList.remove('hidden');
 }
 
 /**
- * 关闭弹窗（全局函数，供HTML调用）
+ * 关闭广告选择器（全局函数，供HTML调用）
  */
-function closeModal() {
-    const modal = document.getElementById('modal');
+function closeAdSelector() {
+    console.log('[Main] 关闭广告选择器');
+    const modal = document.getElementById('adSelectorModal');
     modal.classList.add('hidden');
 }
 
 /**
- * 点击背景关闭弹窗
+ * 选择广告类型（全局函数，供HTML调用）
+ * @param {string} type - 广告类型
+ */
+function selectAdType(type) {
+    console.log('[Main] 用户选择广告类型:', type);
+    
+    const typeNames = {
+        food: '美食餐饮',
+        game: '游戏娱乐',
+        digital: '数码科技',
+        beauty: '美妆时尚',
+        travel: '旅游出行',
+        education: '教育培训'
+    };
+    
+    closeAdSelector();
+    
+    modeController.showToast(
+        `已选择"${typeNames[type]}"广告，将为你换取15分钟免广告观看！`,
+        'success'
+    );
+    
+    // 隐藏当前广告
+    uiController.hideAd();
+}
+
+/**
+ * 打开答题界面（全局函数，供HTML调用）
+ */
+function openQuiz() {
+    console.log('[Main] 打开答题界面');
+    const modal = document.getElementById('quizModal');
+    modal.classList.remove('hidden');
+    
+    // 启动倒计时
+    startQuizTimer();
+}
+
+/**
+ * 关闭答题界面（全局函数，供HTML调用）
+ */
+function closeQuiz() {
+    console.log('[Main] 关闭答题界面');
+    const modal = document.getElementById('quizModal');
+    modal.classList.add('hidden');
+    
+    // 清除倒计时
+    if (window.quizTimerInterval) {
+        clearInterval(window.quizTimerInterval);
+    }
+}
+
+/**
+ * 启动答题倒计时
+ */
+function startQuizTimer() {
+    let time = 10;
+    const timerSpan = document.getElementById('quizTimer');
+    
+    if (window.quizTimerInterval) {
+        clearInterval(window.quizTimerInterval);
+    }
+    
+    window.quizTimerInterval = setInterval(() => {
+        time--;
+        timerSpan.textContent = time;
+        
+        if (time <= 0) {
+            clearInterval(window.quizTimerInterval);
+            closeQuiz();
+            modeController.showToast('答题超时，下次再试吧！', 'warning');
+        }
+    }, 1000);
+}
+
+/**
+ * 回答问题（全局函数，供HTML调用）
+ * @param {string} answer - 用户选择的答案
+ */
+function answerQuiz(answer) {
+    console.log('[Main] 用户回答:', answer);
+    
+    if (window.quizTimerInterval) {
+        clearInterval(window.quizTimerInterval);
+    }
+    
+    if (answer === 'C') {
+        closeQuiz();
+        modeController.showToast('回答正确！广告时长减少30秒 🎉', 'success');
+    } else {
+        modeController.showToast('回答错误，但感谢参与！', 'warning');
+        setTimeout(() => {
+            closeQuiz();
+        }, 1500);
+    }
+}
+
+/**
+ * 使用积分跳过（全局函数，供HTML调用）
+ */
+function skipWithPoints() {
+    console.log('[Main] 使用积分跳过广告');
+    
+    // 模拟积分扣除
+    modeController.showToast('已消耗20积分，跳过当前广告', 'success');
+    uiController.hideAd();
+    document.getElementById('userControlPanel').classList.add('hidden');
+}
+
+/**
+ * 显示广告详细分析（全局函数，供HTML调用）
+ */
+function showAdReasonDetail() {
+    console.log('[Main] 显示广告详细分析');
+    
+    const modal = document.getElementById('adReasonModal');
+    const contentDiv = document.getElementById('adReasonDetailContent');
+    
+    // 获取当前场景的详细分析数据
+    const currentScene = SCENES[uiController.currentSceneId];
+    const detailedReason = currentScene.adData?.detailedReason;
+    
+    if (!detailedReason) {
+        contentDiv.innerHTML = '<p>暂无详细分析数据</p>';
+        modal.classList.remove('hidden');
+        return;
+    }
+    
+    // 生成详细分析HTML
+    let html = `<h3>${detailedReason.title}</h3>`;
+    
+    detailedReason.dimensions.forEach((dim, index) => {
+        html += `
+            <div class="analysis-dimension">
+                <div class="dimension-header">
+                    <h4>${index + 1}. ${dim.name}</h4>
+                    <span class="dimension-score">匹配度: ${dim.score}%</span>
+                </div>
+                <div class="dimension-details">
+                    ${dim.details.map(detail => `
+                        <div class="detail-item">
+                            <i class="bi bi-check-circle" style="color: #00a870;"></i>
+                            <span>${detail}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    });
+    
+    // 添加预期效果
+    html += `
+        <div class="predicted-performance">
+            <h4>📊 预期投放效果</h4>
+            <div class="performance-grid">
+                <div class="performance-item">
+                    <span class="label">点击率</span>
+                    <span class="value">${detailedReason.predictedPerformance.clickRate}</span>
+                </div>
+                <div class="performance-item">
+                    <span class="label">转化率</span>
+                    <span class="value">${detailedReason.predictedPerformance.conversionRate}</span>
+                </div>
+                <div class="performance-item">
+                    <span class="label">ROI</span>
+                    <span class="value">${detailedReason.predictedPerformance.roi}</span>
+                </div>
+                <div class="performance-item">
+                    <span class="label">用户满意度</span>
+                    <span class="value">${detailedReason.predictedPerformance.userSatisfaction}</span>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    contentDiv.innerHTML = html;
+    modal.classList.remove('hidden');
+}
+
+/**
+ * 关闭广告详细分析（全局函数，供HTML调用）
+ */
+function closeAdReasonDetail() {
+    console.log('[Main] 关闭广告详细分析');
+    const modal = document.getElementById('adReasonModal');
+    modal.classList.add('hidden');
+}
+
+// ==================== 模态窗口通用关闭 ====================
+
+/**
+ * 点击背景关闭模态窗口
  */
 document.addEventListener('click', function(e) {
-    const modal = document.getElementById('modal');
-    if (e.target === modal) {
-        closeModal();
+    if (e.target.classList.contains('modal')) {
+        e.target.classList.add('hidden');
+        
+        // 清理答题倒计时
+        if (window.quizTimerInterval) {
+            clearInterval(window.quizTimerInterval);
+        }
     }
 });
+
+// ==================== 欢迎提示 ====================
 
 /**
  * 显示欢迎提示
  */
 function showWelcomeToast() {
-    // 创建提示元素
     const toast = document.createElement('div');
     toast.className = 'welcome-toast';
     toast.innerHTML = `
@@ -221,13 +416,17 @@ function showWelcomeToast() {
             display: flex;
             align-items: center;
             gap: 12px;
+            max-width: 400px;
         ">
-            <i class="bi bi-info-circle" style="font-size: 20px;"></i>
+            <i class="bi bi-lightbulb" style="font-size: 24px;"></i>
             <div>
                 <div style="font-weight: 600; margin-bottom: 4px;">💡 演示提示</div>
-                点击下方"演示场景切换"按钮，体验不同场景下的AI决策
+                <div style="font-size: 13px; opacity: 0.95;">
+                    1. 点击顶部"模式切换"按钮，体验传统广告 vs AI智能广告<br>
+                    2. 切换下方"场景按钮"，查看不同情绪下的AI决策
+                </div>
             </div>
-            <button onclick="this.parentElement.remove()" style="
+            <button onclick="this.parentElement.parentElement.remove()" style="
                 background: rgba(255, 255, 255, 0.2);
                 border: none;
                 color: white;
@@ -239,29 +438,41 @@ function showWelcomeToast() {
                 align-items: center;
                 justify-content: center;
                 margin-left: 8px;
+                font-size: 18px;
             ">×</button>
         </div>
     `;
     
     document.body.appendChild(toast);
     
-    // 5秒后自动消失
+    // 8秒后自动消失
     setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 300);
-    }, 5000);
+        const toastEl = toast.querySelector('div');
+        if (toastEl) {
+            toastEl.style.opacity = '0';
+            toastEl.style.transform = 'translateX(100%)';
+            setTimeout(() => toast.remove(), 300);
+        }
+    }, 8000);
 }
 
-// 添加全局错误处理
+// ==================== 全局错误处理 ====================
+
 window.addEventListener('error', function(e) {
-    console.error('全局错误:', e.error);
+    console.error('[Global Error]', e.error);
 });
 
-// 添加未捕获的Promise错误处理
 window.addEventListener('unhandledrejection', function(e) {
-    console.error('未处理的Promise错误:', e.reason);
+    console.error('[Unhandled Promise]', e.reason);
 });
 
-console.log('%c AdSense·感知广告 Demo ', 'background: #00a870; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold;');
-console.log('版本: 1.0.0');
-console.log('GitHub: [你的仓库地址]');
+// ==================== 开发者信息 ====================
+
+console.log('%c AdSense·感知广告 Demo ', 'background: #00a870; color: white; padding: 8px 16px; border-radius: 4px; font-weight: bold; font-size: 16px;');
+console.log('%c 版本: 1.0.0 ', 'background: #333; color: white; padding: 4px 8px; border-radius: 4px;');
+console.log('%c 腾讯PCG AI创造营参赛作品 ', 'background: #ffaa00; color: white; padding: 4px 8px; border-radius: 4px;');
+console.log('\n快捷键提示:');
+console.log('  1 - 切换到高潮场景');
+console.log('  2 - 切换到日常场景');
+console.log('  3 - 切换到轻松场景');
+console.log('  Enter - 发送聊天消息\n');

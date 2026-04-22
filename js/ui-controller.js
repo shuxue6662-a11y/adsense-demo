@@ -1,8 +1,8 @@
-// ==================== UI 控制器 ====================
+// ==================== UI 控制器（优化版）====================
 
 class UIController {
     constructor() {
-        this.currentScene = 'high';
+        this.currentSceneId = 'high';
         this.chart = null;
         this.isTyping = false;
         this.emotionUpdateInterval = null;
@@ -12,17 +12,14 @@ class UIController {
      * 初始化
      */
     init() {
+        console.log('[UI Controller] 初始化');
+        
         // 初始化情绪曲线图
         this.initEmotionChart();
         
         // 设置默认场景
         this.updateScene(SCENES.high);
         
-        // 如果启用了自动播放，开始更新情绪曲线
-        if (CONFIG.DEMO.AUTO_PLAY_EMOTION_CHANGE) {
-            this.startEmotionAnimation();
-        }
-
         // 绑定快捷键
         this.bindKeyboardShortcuts();
     }
@@ -36,10 +33,10 @@ class UIController {
         this.chart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['0分', '5分', '10分', '15分', '20分', '25分', '30分', '35分', '40分', '45分'],
+                labels: EMOTION_CURVE_DATA.high.labels,
                 datasets: [{
                     label: '情绪强度',
-                    data: EMOTION_CURVE_DATA.high,
+                    data: EMOTION_CURVE_DATA.high.data,
                     borderColor: '#ff4444',
                     backgroundColor: 'rgba(255, 68, 68, 0.1)',
                     borderWidth: 2,
@@ -108,7 +105,8 @@ class UIController {
      * @param {object} scene - 场景数据
      */
     updateScene(scene) {
-        this.currentScene = scene.id;
+        this.currentSceneId = scene.id;
+        console.log('[UI Controller] 更新场景:', scene.name);
 
         // 更新视频画面
         document.getElementById('sceneImage').src = scene.image;
@@ -117,7 +115,10 @@ class UIController {
         // 更新AI标签
         const aiTag = document.getElementById('aiTag');
         aiTag.querySelector('#aiTagText').textContent = scene.aiTag.text;
-        aiTag.className = `ai-tag ${scene.aiTag.class}`;
+        aiTag.className = `ai-tag ai-mode-only ${scene.aiTag.class}`;
+
+        // 更新AI分析过程
+        this.updateAIAnalysis(scene.aiAnalysis);
 
         // 更新情绪条
         this.updateEmotionBar(scene.emotion);
@@ -132,10 +133,13 @@ class UIController {
         this.updateEmotionChart(scene.id);
 
         // 更新广告显示
-        if (scene.showAd && scene.adData) {
+        if (scene.showAd && scene.adData && modeController.getCurrentMode() === 'ai') {
             this.showAd(scene.adData);
+            // 显示用户主动权面板
+            document.getElementById('userControlPanel').classList.remove('hidden');
         } else {
             this.hideAd();
+            document.getElementById('userControlPanel').classList.add('hidden');
         }
 
         // 添加AI自动消息
@@ -149,15 +153,47 @@ class UIController {
     }
 
     /**
+     * 更新AI分析过程（新增）
+     * @param {object} analysis
+     */
+    updateAIAnalysis(analysis) {
+        if (!analysis) return;
+
+        // 更新步骤1
+        if (analysis.step1) {
+            document.getElementById('step1Text').textContent = analysis.step1.text;
+            document.querySelector('#step1 .confidence-fill').style.width = `${analysis.step1.confidence}%`;
+            document.querySelector('#step1 .confidence-value').textContent = `置信度: ${analysis.step1.confidence}%`;
+        }
+
+        // 更新步骤2
+        if (analysis.step2) {
+            document.getElementById('step2Text').textContent = analysis.step2.text;
+            document.querySelector('#step2 .confidence-fill').style.width = `${analysis.step2.confidence}%`;
+            document.querySelector('#step2 .confidence-value').textContent = `置信度: ${analysis.step2.confidence}%`;
+        }
+
+        // 更新步骤3
+        if (analysis.step3) {
+            document.getElementById('step3Text').textContent = analysis.step3.text;
+            document.querySelector('#step3 .confidence-fill').style.width = `${analysis.step3.confidence}%`;
+            document.querySelector('#step3 .confidence-value').textContent = `置信度: ${analysis.step3.confidence}%`;
+        }
+
+        // 更新最终决策
+        const scene = SCENES[this.currentSceneId];
+        document.getElementById('finalDecision').textContent = scene.decision.adDecision + '，' + scene.decision.waitReason;
+    }
+
+    /**
      * 更新情绪条
-     * @param {object} emotion - 情绪数据
+     * @param {object} emotion
      */
     updateEmotionBar(emotion) {
         const fill = document.getElementById('emotionFill');
         const score = document.getElementById('emotionScore');
         const label = document.getElementById('emotionLabel');
 
-        // 平滑过渡
         setTimeout(() => {
             fill.style.width = `${emotion.score}%`;
             fill.style.background = emotion.gradient;
@@ -166,14 +202,14 @@ class UIController {
 
             label.innerHTML = `
                 <i class="${emotion.icon}"></i>
-                <span>${emotion.level} - ${SCENES[this.currentScene].sceneDesc}</span>
+                <span>${emotion.level} - ${SCENES[this.currentSceneId].sceneDesc}</span>
             `;
         }, 100);
     }
 
     /**
      * 更新决策面板
-     * @param {object} decision - 决策数据
+     * @param {object} decision
      */
     updateDecisionPanel(decision) {
         document.getElementById('decisionScene').textContent = decision.scene;
@@ -195,7 +231,7 @@ class UIController {
 
     /**
      * 更新决策流程可视化
-     * @param {Array} activeSteps - 激活的步骤索引
+     * @param {Array} activeSteps
      */
     updateDecisionFlow(activeSteps) {
         const steps = document.querySelectorAll('.flow-step');
@@ -210,25 +246,26 @@ class UIController {
 
     /**
      * 更新情绪曲线图
-     * @param {string} sceneId - 场景ID
+     * @param {string} sceneId
      */
     updateEmotionChart(sceneId) {
         if (!this.chart) return;
 
-        const data = EMOTION_CURVE_DATA[sceneId];
+        const curveData = EMOTION_CURVE_DATA[sceneId];
         const color = SCENES[sceneId].emotion.color;
 
-        this.chart.data.datasets[0].data = data;
+        this.chart.data.labels = curveData.labels;
+        this.chart.data.datasets[0].data = curveData.data;
         this.chart.data.datasets[0].borderColor = color;
         this.chart.data.datasets[0].backgroundColor = color.replace(')', ', 0.1)').replace('rgb', 'rgba');
         this.chart.data.datasets[0].pointBackgroundColor = color;
         
-        this.chart.update('none'); // 不使用动画，立即更新
+        this.chart.update('none');
     }
 
     /**
      * 显示广告
-     * @param {object} adData - 广告数据
+     * @param {object} adData
      */
     showAd(adData) {
         const container = document.getElementById('adContainer');
@@ -252,9 +289,9 @@ class UIController {
 
     /**
      * 添加聊天消息
-     * @param {string} text - 消息内容
-     * @param {boolean} isAI - 是否是AI消息
-     * @param {boolean} useTyping - 是否使用打字机效果
+     * @param {string} text
+     * @param {boolean} isAI
+     * @param {boolean} useTyping
      */
     addChatMessage(text, isAI = false, useTyping = false) {
         const messagesContainer = document.getElementById('chatMessages');
@@ -271,7 +308,7 @@ class UIController {
                     <i class="bi bi-robot"></i>
                 </div>
                 <div class="message-content">
-                    <div class="message-text" id="typing-target"></div>
+                    <div class="message-text" id="typing-target-${Date.now()}"></div>
                     <div class="message-time">${timeString}</div>
                 </div>
             `;
@@ -287,28 +324,27 @@ class UIController {
         messagesContainer.appendChild(messageDiv);
 
         if (isAI && useTyping) {
-            this.typeWriter(text, messageDiv.querySelector('#typing-target'));
+            const targetId = messageDiv.querySelector('[id^="typing-target"]').id;
+            this.typeWriter(text, document.getElementById(targetId));
         } else if (isAI) {
-            messageDiv.querySelector('#typing-target').innerHTML = this.formatMessage(text);
+            messageDiv.querySelector('[id^="typing-target"]').innerHTML = this.formatMessage(text);
         }
 
-        // 滚动到底部
         this.scrollToBottom(messagesContainer);
     }
 
     /**
      * 添加AI消息（带去重）
-     * @param {string} text - 消息内容
-     * @param {boolean} clearPrevious - 是否清除之前的自动消息
+     * @param {string} text
+     * @param {boolean} clearPrevious
      */
     addAIMessage(text, clearPrevious = false) {
         const messagesContainer = document.getElementById('chatMessages');
         
         if (clearPrevious) {
-            // 只保留用户消息，删除自动生成的AI消息
             const messages = messagesContainer.querySelectorAll('.message');
             messages.forEach((msg, index) => {
-                if (index > 0) { // 保留第一条欢迎消息
+                if (index > 0) {
                     msg.remove();
                 }
             });
@@ -319,32 +355,27 @@ class UIController {
 
     /**
      * 打字机效果
-     * @param {string} text - 文本内容
-     * @param {HTMLElement} element - 目标元素
+     * @param {string} text
+     * @param {HTMLElement} element
      */
     async typeWriter(text, element) {
         this.isTyping = true;
         element.textContent = '';
         
-        const formattedText = this.formatMessage(text);
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = formattedText;
-        
-        // 简化版：直接显示（完整版可以逐字显示）
         for (let i = 0; i < text.length; i++) {
             if (!this.isTyping) break;
             element.textContent = text.substring(0, i + 1);
             await this.sleep(CONFIG.DEMO.MESSAGE_TYPING_SPEED);
         }
         
-        element.innerHTML = formattedText;
+        element.innerHTML = this.formatMessage(text);
         this.isTyping = false;
     }
 
     /**
-     * 格式化消息（支持换行和列表）
-     * @param {string} text - 原始文本
-     * @returns {string} - 格式化后的HTML
+     * 格式化消息
+     * @param {string} text
+     * @returns {string}
      */
     formatMessage(text) {
         return text
@@ -355,7 +386,7 @@ class UIController {
 
     /**
      * HTML转义
-     * @param {string} text - 原始文本
+     * @param {string} text
      * @returns {string}
      */
     escapeHtml(text) {
@@ -366,7 +397,7 @@ class UIController {
 
     /**
      * 滚动到底部
-     * @param {HTMLElement} element - 容器元素
+     * @param {HTMLElement} element
      */
     scrollToBottom(element) {
         setTimeout(() => {
@@ -376,12 +407,13 @@ class UIController {
 
     /**
      * 更新场景按钮状态
-     * @param {string} activeId - 激活的场景ID
+     * @param {string} activeId
      */
     updateSceneButtons(activeId) {
         const buttons = document.querySelectorAll('.scene-btn');
         buttons.forEach(btn => {
-            if (btn.onclick.toString().includes(activeId)) {
+            const btnSceneId = btn.onclick.toString().match(/switchScene\('(\w+)'\)/)?.[1];
+            if (btnSceneId === activeId) {
                 btn.classList.add('active');
             } else {
                 btn.classList.remove('active');
@@ -395,18 +427,12 @@ class UIController {
     animateSceneChange() {
         const screen = document.querySelector('.video-screen');
         screen.style.opacity = '0';
+        screen.style.transform = 'scale(0.98)';
         
         setTimeout(() => {
             screen.style.opacity = '1';
+            screen.style.transform = 'scale(1)';
         }, 150);
-    }
-
-    /**
-     * 开始情绪动画
-     */
-    startEmotionAnimation() {
-        // 这里可以添加情绪值的动态变化效果
-        // 暂时省略，避免干扰演示
     }
 
     /**
@@ -414,12 +440,9 @@ class UIController {
      */
     bindKeyboardShortcuts() {
         document.addEventListener('keydown', (e) => {
-            // 1, 2, 3 键切换场景
             if (e.key === '1') switchScene('high');
             if (e.key === '2') switchScene('mid');
             if (e.key === '3') switchScene('low');
-            
-            // Enter 键发送消息
             if (e.key === 'Enter' && e.target.id === 'chatInput') {
                 sendMessage();
             }
@@ -427,25 +450,23 @@ class UIController {
     }
 
     /**
-     * 工具函数：延迟
-     * @param {number} ms - 毫秒
+     * 显示加载状态
+     * @param {boolean} show
+     */
+    showLoading(show) {
+        const indicator = document.getElementById('processingIndicator');
+        if (indicator) {
+            indicator.style.display = show ? 'flex' : 'none';
+        }
+    }
+
+    /**
+     * 延迟函数
+     * @param {number} ms
      * @returns {Promise}
      */
     sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    /**
-     * 显示加载状态
-     * @param {boolean} show - 是否显示
-     */
-    showLoading(show) {
-        const indicator = document.getElementById('processingIndicator');
-        if (show) {
-            indicator.style.display = 'flex';
-        } else {
-            indicator.style.display = 'none';
-        }
     }
 }
 
