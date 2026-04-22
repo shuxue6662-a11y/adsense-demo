@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdSense·感知广告 - 腾讯视频AI广告引擎</title>
+    
+    <!-- 样式文件 -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    
+    <!-- 图标库 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+<body>
+    
+    <!-- 顶部导航栏 -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="bi bi-camera-video-fill"></i>
+                <span>腾讯视频</span>
+                <span class="badge">AI驱动</span>
+            </div>
+            <h1 class="title">AdSense·感知广告引擎</h1>
+            <div class="tagline">让AI在正确的时刻，以正确的方式投放广告</div>
+        </div>
+    </header>
+
+    <!-- 主容器 -->
+    <main class="main-container">
+        
+        <!-- 左侧：播放器区域 -->
+        <section class="player-section">
+            
+            <!-- 视频播放器 -->
+            <div class="video-player">
+                <!-- 视频画面 -->
+                <div class="video-screen">
+                    <img id="sceneImage" src="assets/images/scenes/high-emotion.jpg" alt="当前剧情场景">
+                    
+                    <!-- 视频控制条覆盖层 -->
+                    <div class="video-overlay">
+                        <div class="video-info">
+                            <span class="drama-title" id="dramaTitle">《庆余年 第二季》第15集</span>
+                            <span class="play-status">
+                                <i class="bi bi-play-circle-fill"></i>
+                                <span id="currentTime">23:45</span> / <span id="totalTime">45:30</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- AI分析标签浮层 -->
+                    <div class="ai-tag" id="aiTag">
+                        <i class="bi bi-robot"></i>
+                        <span id="aiTagText">AI正在分析情绪...</span>
+                    </div>
+                </div>
+
+                <!-- 进度条 -->
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 52%"></div>
+                    <div class="progress-marker" style="left: 52%">
+                        <div class="marker-tooltip">当前播放位置</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 情绪监测面板 -->
+            <div class="emotion-panel">
+                <div class="panel-header">
+                    <i class="bi bi-graph-up"></i>
+                    <h3>实时情绪监测</h3>
+                    <span class="live-indicator">
+                        <span class="pulse"></span>
+                        LIVE
+                    </span>
+                </div>
+
+                <!-- 情绪强度条 -->
+                <div class="emotion-bar-container">
+                    <div class="emotion-labels">
+                        <span>剧情情绪强度</span>
+                        <span class="emotion-score" id="emotionScore">85/100</span>
+                    </div>
+                    <div class="emotion-bar">
+                        <div class="emotion-fill" id="emotionFill" style="width: 85%"></div>
+                        <div class="emotion-zones">
+                            <div class="zone zone-safe" style="width: 30%">
+                                <span>安全区</span>
+                            </div>
+                            <div class="zone zone-caution" style="width: 40%">
+                                <span>谨慎区</span>
+                            </div>
+                            <div class="zone zone-danger" style="width: 30%">
+                                <span>禁入区</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="emotion-label" id="emotionLabel">
+                        <i class="bi bi-emoji-angry"></i>
+                        <span>高度紧张 - 生死危机场景</span>
+                    </div>
+                </div>
+
+                <!-- 情绪曲线图 -->
+                <div class="emotion-chart-container">
+                    <canvas id="emotionChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 场景切换控制器（演示用） -->
+            <div class="scene-controller">
+                <div class="controller-header">
+                    <i class="bi bi-joystick"></i>
+                    <h4>演示场景切换</h4>
+                    <span class="tip">点击按钮查看不同场景下的AI决策</span>
+                </div>
+                <div class="scene-buttons">
+                    <button class="scene-btn scene-high active" onclick="switchScene('high')">
+                        <i class="bi bi-lightning-fill"></i>
+                        <div class="btn-content">
+                            <span class="btn-title">高潮场景</span>
+                            <span class="btn-desc">情绪强度 85/100</span>
+                        </div>
+                    </button>
+                    <button class="scene-btn scene-mid" onclick="switchScene('mid')">
+                        <i class="bi bi-emoji-smile"></i>
+                        <div class="btn-content">
+                            <span class="btn-title">日常场景</span>
+                            <span class="btn-desc">情绪强度 40/100</span>
+                        </div>
+                    </button>
+                    <button class="scene-btn scene-low" onclick="switchScene('low')">
+                        <i class="bi bi-emoji-laughing"></i>
+                        <div class="btn-content">
+                            <span class="btn-title">轻松场景</span>
+                            <span class="btn-desc">情绪强度 15/100</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 广告展示区 -->
+            <div class="ad-container hidden" id="adContainer">
+                <div class="ad-header">
+                    <span class="ad-badge">AI精选广告</span>
+                    <button class="ad-interact-btn" id="adInteractBtn">
+                        <i class="bi bi-controller"></i>
+                        互动答题减少30s
+                    </button>
+                </div>
+                <div class="ad-content">
+                    <img id="adImage" src="" alt="广告内容">
+                    <div class="ad-info">
+                        <h4 id="adTitle">广告标题</h4>
+                        <p id="adDesc">广告描述</p>
+                    </div>
+                </div>
+                <div class="ad-reason">
+                    <i class="bi bi-lightbulb"></i>
+                    <div id="adReasonText">AI匹配理由...</div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- 右侧：AI决策面板 -->
+        <aside class="ai-panel">
+            
+            <!-- 用户画像卡片 -->
+            <div class="panel-card">
+                <div class="card-header">
+                    <i class="bi bi-person-circle"></i>
+                    <h3>当前用户画像</h3>
+                </div>
+                <div class="user-profile">
+                    <div class="profile-tags">
+                        <span class="tag tag-gender">
+                            <i class="bi bi-gender-male"></i>男性
+                        </span>
+                        <span class="tag tag-age">22岁</span>
+                        <span class="tag tag-hobby">
+                            <i class="bi bi-controller"></i>游戏玩家
+                        </span>
+                        <span class="tag tag-time">
+                            <i class="bi bi-moon-stars"></i>深夜观看
+                        </span>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">观看时长</span>
+                            <span class="stat-value">23:45</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">偏好类型</span>
+                            <span class="stat-value">古装/悬疑</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">设备</span>
+                            <span class="stat-value">手机端</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI实时决策卡片 -->
+            <div class="panel-card decision-card">
+                <div class="card-header">
+                    <i class="bi bi-cpu"></i>
+                    <h3>AI实时决策</h3>
+                    <span class="processing" id="processingIndicator">
+                        <span class="spinner"></span>
+                        分析中
+                    </span>
+                </div>
+                <div class="decision-status">
+                    <div class="decision-item">
+                        <span class="decision-label">
+                            <i class="bi bi-eye"></i>场景识别
+                        </span>
+                        <span class="decision-value" id="decisionScene">范若若生死危机</span>
+                    </div>
+                    <div class="decision-item">
+                        <span class="decision-label">
+                            <i class="bi bi-heart-pulse"></i>情绪检测
+                        </span>
+                        <span class="decision-value danger" id="decisionEmotion">紧张 · 85分</span>
+                    </div>
+                    <div class="decision-item">
+                        <span class="decision-label">
+                            <i class="bi bi-shield-check"></i>广告决策
+                        </span>
+                        <span class="decision-value danger" id="decisionAd">
+                            <i class="bi bi-x-circle"></i>延迟插播
+                        </span>
+                    </div>
+                    <div class="decision-item">
+                        <span class="decision-label">
+                            <i class="bi bi-clock"></i>等待时机
+                        </span>
+                        <span class="decision-value" id="decisionWait">下一个情绪低谷</span>
+                    </div>
+                    <div class="decision-item">
+                        <span class="decision-label">
+                            <i class="bi bi-hourglass-split"></i>预计等待
+                        </span>
+                        <span class="decision-value" id="decisionTime">约3分钟后</span>
+                    </div>
+                </div>
+
+                <!-- 决策流程可视化 -->
+                <div class="decision-flow">
+                    <div class="flow-step active">
+                        <div class="flow-icon">1</div>
+                        <span>内容分析</span>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step active">
+                        <div class="flow-icon">2</div>
+                        <span>情绪评估</span>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step active">
+                        <div class="flow-icon">3</div>
+                        <span>时机判断</span>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="flow-icon">4</div>
+                        <span>广告投放</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 对比数据卡片 -->
+            <div class="panel-card">
+                <div class="card-header">
+                    <i class="bi bi-bar-chart"></i>
+                    <h3>传统广告 vs AdSense</h3>
+                </div>
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th>维度</th>
+                            <th>传统广告</th>
+                            <th>AdSense</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>插入时机</td>
+                            <td class="bad">
+                                <i class="bi bi-x-circle"></i>固定时间点
+                            </td>
+                            <td class="good">
+                                <i class="bi bi-check-circle"></i>情绪低谷点
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>内容匹配</td>
+                            <td class="bad">
+                                <i class="bi bi-x-circle"></i>随机/通用
+                            </td>
+                            <td class="good">
+                                <i class="bi bi-check-circle"></i>三维精准
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>用户体验</td>
+                            <td class="bad">
+                                <i class="bi bi-x-circle"></i>强制打断
+                            </td>
+                            <td class="good">
+                                <i class="bi bi-check-circle"></i>可控参与
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>完播率</td>
+                            <td class="bad">~30%</td>
+                            <td class="good">~75% <span class="increase">↑150%</span></td>
+                        </tr>
+                        <tr>
+                            <td>用户满意度</td>
+                            <td class="bad">2.1/5</td>
+                            <td class="good">4.3/5 <span class="increase">↑105%</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- AI对话卡片 -->
+            <div class="panel-card chat-card">
+                <div class="card-header">
+                    <i class="bi bi-chat-dots"></i>
+                    <h3>询问AI决策理由</h3>
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message ai-message">
+                        <div class="message-avatar">
+                            <i class="bi bi-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-text">
+                                你好！我是AdSense广告AI。我刚检测到当前剧情情绪强度为85分（范若若生死危机场景），所以我决定暂缓广告插入，等待情绪低谷。有什么想问我的吗？
+                            </div>
+                            <div class="message-time">刚刚</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 快捷问题 -->
+                <div class="quick-questions">
+                    <button class="quick-btn" onclick="askQuestion('为什么现在不放广告？')">
+                        为什么现在不放广告？
+                    </button>
+                    <button class="quick-btn" onclick="askQuestion('你怎么判断情绪的？')">
+                        你怎么判断情绪的？
+                    </button>
+                    <button class="quick-btn" onclick="askQuestion('我能选择广告类型吗？')">
+                        我能选择广告类型吗？
+                    </button>
+                </div>
+
+                <!-- 输入框 -->
+                <div class="chat-input-container">
+                    <input 
+                        type="text" 
+                        id="chatInput" 
+                        class="chat-input" 
+                        placeholder="输入你的问题，按Enter发送..."
+                        onkeypress="handleKeyPress(event)"
+                    >
+                    <button class="send-btn" onclick="sendMessage()">
+                        <i class="bi bi-send-fill"></i>
+                    </button>
+                </div>
+            </div>
+
+        </aside>
+
+    </main>
+
+    <!-- 底部信息栏 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <span>© 2024 AdSense·感知广告 | 腾讯PCG AI创造营参赛作品</span>
+            <span class="footer-links">
+                <a href="#" onclick="showInfo('tech')">技术架构</a>
+                <a href="#" onclick="showInfo('about')">关于项目</a>
+            </span>
+        </div>
+    </footer>
+
+    <!-- 模态窗口 -->
+    <div class="modal hidden" id="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- 引入JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/scenes.js"></script>
+    <script src="js/coze-api.js"></script>
+    <script src="js/ui-controller.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+</html>
