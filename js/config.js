@@ -4,12 +4,13 @@ const CONFIG = {
     // Coze API配置
     COZE: {
         API_URL: 'https://api.coze.cn/v3/chat',
-        API_KEY: 'pat_3rC7k0AAV8jncyGqXreiwD66if5TYDoLZZUwVgkFANI5VpFEAXQHHEGCNwmX90F5', // 在这里填入你的Coze API Key
-        BOT_ID: 'AdSense感知广告引擎',  // 在这里填入你的Bot ID
+        // 使用Personal Access Token
+        API_KEY: 'pat_3rC7k0AAV8jncyGqXreiwD66if5TYDoLZZUwVgkFANI5VpFEAXQHHEGCNwmX90F5',
+        BOT_ID: '7631414767365668906',
         USER_ID: 'demo_user_' + Date.now()
     },
     
-    // 是否启用真实API（false时使用预设回答）
+    // 是否启用真实API（建议先设为false测试，成功后再改为true）
     USE_REAL_API: true,
     
     // 预设回答库（API失败时的降级方案）
@@ -33,11 +34,10 @@ const CONFIG = {
     
     // 演示配置
     DEMO: {
-        AUTO_PLAY_EMOTION_CHANGE: true, // 是否自动播放情绪变化动画
-        CHART_UPDATE_INTERVAL: 2000,    // 图表更新间隔(ms)
-        MESSAGE_TYPING_SPEED: 30         // 打字机效果速度(ms/字)
+        AUTO_PLAY_EMOTION_CHANGE: true,
+        CHART_UPDATE_INTERVAL: 2000,
+        MESSAGE_TYPING_SPEED: 30
     }
 };
 
-// 防止配置被意外修改
 Object.freeze(CONFIG);

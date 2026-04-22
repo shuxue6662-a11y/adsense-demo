@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdSense·感知广告 - 腾讯视频AI广告引擎</title>
+    <title>AdSense·感知广告 - 用AI改造腾讯视频广告</title>
     
-    <!-- 样式文件 -->
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/animations.css">
     
-    <!-- 图标库 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 </head>
 <body>
@@ -18,13 +16,36 @@
     <!-- 顶部导航栏 -->
     <header class="header">
         <div class="header-content">
-            <div class="logo">
-                <i class="bi bi-camera-video-fill"></i>
-                <span>腾讯视频</span>
-                <span class="badge">AI驱动</span>
+            <div class="header-top">
+                <div class="logo">
+                    <i class="bi bi-camera-video-fill"></i>
+                    <span>腾讯视频</span>
+                    <span class="badge">AI驱动</span>
+                </div>
+                
+                <!-- 核心：模式切换器 -->
+                <div class="mode-switcher">
+                    <span class="mode-label">体验模式：</span>
+                    <div class="switch-container">
+                        <button class="mode-btn" id="traditionalMode" onclick="switchMode('traditional')">
+                            <i class="bi bi-x-circle"></i>
+                            传统广告
+                        </button>
+                        <button class="mode-btn active" id="aiMode" onclick="switchMode('ai')">
+                            <i class="bi bi-stars"></i>
+                            AdSense智能
+                        </button>
+                    </div>
+                </div>
             </div>
+            
             <h1 class="title">AdSense·感知广告引擎</h1>
-            <div class="tagline">让AI在正确的时刻，以正确的方式投放广告</div>
+            <div class="tagline">
+                <span id="modeTagline">让AI在正确的时刻，以正确的方式投放广告</span>
+                <span class="comparison-tip" id="comparisonTip">
+                    💡 切换到"传统广告"查看对比效果
+                </span>
+            </div>
         </div>
     </header>
 
@@ -36,11 +57,9 @@
             
             <!-- 视频播放器 -->
             <div class="video-player">
-                <!-- 视频画面 -->
                 <div class="video-screen">
                     <img id="sceneImage" src="assets/images/scenes/high-emotion.jpg" alt="当前剧情场景">
                     
-                    <!-- 视频控制条覆盖层 -->
                     <div class="video-overlay">
                         <div class="video-info">
                             <span class="drama-title" id="dramaTitle">《庆余年 第二季》第15集</span>
@@ -51,19 +70,103 @@
                         </div>
                     </div>
 
-                    <!-- AI分析标签浮层 -->
-                    <div class="ai-tag" id="aiTag">
+                    <!-- AI分析标签（仅AI模式显示） -->
+                    <div class="ai-tag ai-mode-only" id="aiTag">
                         <i class="bi bi-robot"></i>
                         <span id="aiTagText">AI正在分析情绪...</span>
                     </div>
+
+                    <!-- 传统广告强制弹窗（仅传统模式显示） -->
+                    <div class="traditional-ad-popup hidden" id="traditionalAdPopup">
+                        <div class="popup-content">
+                            <div class="popup-header">
+                                <span class="ad-label">广告</span>
+                                <span class="ad-timer" id="adTimer">60秒后可跳过</span>
+                            </div>
+                            <img src="assets/images/ads/game-ad.jpg" alt="随机广告">
+                            <div class="popup-footer">
+                                <button class="skip-btn disabled" id="skipBtn">
+                                    <i class="bi bi-forward-fill"></i>
+                                    跳过广告
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- 进度条 -->
                 <div class="progress-bar">
                     <div class="progress-fill" id="progressFill" style="width: 52%"></div>
                     <div class="progress-marker" style="left: 52%">
                         <div class="marker-tooltip">当前播放位置</div>
                     </div>
+                    <!-- 传统模式：固定广告插入点标记 -->
+                    <div class="ad-marker traditional-mode-only" style="left: 33%">
+                        <div class="marker-tooltip">固定广告位</div>
+                    </div>
+                    <div class="ad-marker traditional-mode-only" style="left: 66%">
+                        <div class="marker-tooltip">固定广告位</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI分析过程可视化（仅AI模式） -->
+            <div class="ai-analysis-panel ai-mode-only">
+                <div class="panel-header">
+                    <i class="bi bi-cpu-fill"></i>
+                    <h3>AI实时分析过程</h3>
+                    <span class="live-badge">
+                        <span class="pulse"></span>
+                        实时
+                    </span>
+                </div>
+                
+                <div class="analysis-steps">
+                    <div class="step-item active" id="step1">
+                        <div class="step-icon">
+                            <i class="bi bi-camera-video"></i>
+                        </div>
+                        <div class="step-content">
+                            <h4>① 视频内容理解</h4>
+                            <p id="step1Text">正在分析画面情绪...</p>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: 92%"></div>
+                                <span class="confidence-value">置信度: 92%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-item active" id="step2">
+                        <div class="step-icon">
+                            <i class="bi bi-person-badge"></i>
+                        </div>
+                        <div class="step-content">
+                            <h4>② 用户画像匹配</h4>
+                            <p id="step2Text">匹配用户偏好和行为...</p>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: 88%"></div>
+                                <span class="confidence-value">置信度: 88%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-item active" id="step3">
+                        <div class="step-icon">
+                            <i class="bi bi-lightbulb"></i>
+                        </div>
+                        <div class="step-content">
+                            <h4>③ 智能决策</h4>
+                            <p id="step3Text">综合评估最优策略...</p>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: 95%"></div>
+                                <span class="confidence-value">置信度: 95%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analysis-result">
+                    <div class="result-label">最终决策：</div>
+                    <div class="result-value" id="finalDecision">延迟广告插播，等待情绪低谷</div>
                 </div>
             </div>
 
@@ -71,15 +174,18 @@
             <div class="emotion-panel">
                 <div class="panel-header">
                     <i class="bi bi-graph-up"></i>
-                    <h3>实时情绪监测</h3>
-                    <span class="live-indicator">
+                    <h3>
+                        <span class="ai-mode-only">AI情绪监测</span>
+                        <span class="traditional-mode-only">剧情时间轴</span>
+                    </h3>
+                    <span class="live-indicator ai-mode-only">
                         <span class="pulse"></span>
                         LIVE
                     </span>
                 </div>
 
-                <!-- 情绪强度条 -->
-                <div class="emotion-bar-container">
+                <!-- AI模式：情绪条 -->
+                <div class="emotion-bar-container ai-mode-only">
                     <div class="emotion-labels">
                         <span>剧情情绪强度</span>
                         <span class="emotion-score" id="emotionScore">85/100</span>
@@ -88,13 +194,13 @@
                         <div class="emotion-fill" id="emotionFill" style="width: 85%"></div>
                         <div class="emotion-zones">
                             <div class="zone zone-safe" style="width: 30%">
-                                <span>安全区</span>
+                                <span>安全区 0-30</span>
                             </div>
                             <div class="zone zone-caution" style="width: 40%">
-                                <span>谨慎区</span>
+                                <span>谨慎区 30-70</span>
                             </div>
                             <div class="zone zone-danger" style="width: 30%">
-                                <span>禁入区</span>
+                                <span>禁入区 70-100</span>
                             </div>
                         </div>
                     </div>
@@ -104,49 +210,111 @@
                     </div>
                 </div>
 
+                <!-- 传统模式：说明 -->
+                <div class="traditional-mode-only traditional-notice">
+                    <i class="bi bi-info-circle"></i>
+                    <p>传统广告系统按固定时间点插播（每15分钟），不考虑剧情情绪状态</p>
+                </div>
+
                 <!-- 情绪曲线图 -->
                 <div class="emotion-chart-container">
                     <canvas id="emotionChart"></canvas>
                 </div>
             </div>
 
-            <!-- 场景切换控制器（演示用） -->
+            <!-- 场景切换控制器 -->
             <div class="scene-controller">
                 <div class="controller-header">
                     <i class="bi bi-joystick"></i>
                     <h4>演示场景切换</h4>
-                    <span class="tip">点击按钮查看不同场景下的AI决策</span>
+                    <span class="tip">选择不同场景查看AI决策差异</span>
                 </div>
                 <div class="scene-buttons">
                     <button class="scene-btn scene-high active" onclick="switchScene('high')">
                         <i class="bi bi-lightning-fill"></i>
                         <div class="btn-content">
                             <span class="btn-title">高潮场景</span>
-                            <span class="btn-desc">情绪强度 85/100</span>
+                            <span class="btn-desc">情绪 85/100 · 生死危机</span>
                         </div>
                     </button>
                     <button class="scene-btn scene-mid" onclick="switchScene('mid')">
                         <i class="bi bi-emoji-smile"></i>
                         <div class="btn-content">
                             <span class="btn-title">日常场景</span>
-                            <span class="btn-desc">情绪强度 40/100</span>
+                            <span class="btn-desc">情绪 40/100 · 朝堂对话</span>
                         </div>
                     </button>
                     <button class="scene-btn scene-low" onclick="switchScene('low')">
                         <i class="bi bi-emoji-laughing"></i>
                         <div class="btn-content">
                             <span class="btn-title">轻松场景</span>
-                            <span class="btn-desc">情绪强度 15/100</span>
+                            <span class="btn-desc">情绪 15/100 · 搞笑日常</span>
                         </div>
                     </button>
                 </div>
             </div>
 
-            <!-- 广告展示区 -->
-            <div class="ad-container hidden" id="adContainer">
+            <!-- 用户主动权工具（仅AI模式） -->
+            <div class="user-control-panel ai-mode-only hidden" id="userControlPanel">
+                <div class="panel-header">
+                    <i class="bi bi-sliders"></i>
+                    <h3>用户主动权</h3>
+                    <span class="new-badge">新功能</span>
+                </div>
+
+                <div class="control-options">
+                    <div class="control-option">
+                        <div class="option-icon">
+                            <i class="bi bi-collection-play"></i>
+                        </div>
+                        <div class="option-content">
+                            <h4>自选广告类型</h4>
+                            <p>选择你感兴趣的品类，换取15分钟免广告</p>
+                            <button class="option-btn" onclick="openAdSelector()">
+                                <i class="bi bi-hand-index"></i>
+                                立即选择
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="control-option">
+                        <div class="option-icon">
+                            <i class="bi bi-trophy"></i>
+                        </div>
+                        <div class="option-content">
+                            <h4>互动答题减时长</h4>
+                            <p>参与品牌互动问答，答对减少30秒</p>
+                            <button class="option-btn" onclick="openQuiz()">
+                                <i class="bi bi-play-circle"></i>
+                                开始答题
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="control-option">
+                        <div class="option-icon">
+                            <i class="bi bi-skip-forward"></i>
+                        </div>
+                        <div class="option-content">
+                            <h4>智能跳过</h4>
+                            <p>消耗20积分立即跳过当前广告</p>
+                            <button class="option-btn" onclick="skipWithPoints()">
+                                <i class="bi bi-coin"></i>
+                                消耗积分
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 智能广告展示区（仅AI模式） -->
+            <div class="ad-container ai-mode-only hidden" id="adContainer">
                 <div class="ad-header">
-                    <span class="ad-badge">AI精选广告</span>
-                    <button class="ad-interact-btn" id="adInteractBtn">
+                    <span class="ad-badge">
+                        <i class="bi bi-stars"></i>
+                        AI精选广告
+                    </span>
+                    <button class="ad-interact-btn" onclick="openQuiz()">
                         <i class="bi bi-controller"></i>
                         互动答题减少30s
                     </button>
@@ -160,15 +328,244 @@
                 </div>
                 <div class="ad-reason">
                     <i class="bi bi-lightbulb"></i>
-                    <div id="adReasonText">AI匹配理由...</div>
+                    <div class="reason-content">
+                        <div class="reason-title">为什么推荐这个广告？</div>
+                        <div id="adReasonText">AI匹配理由...</div>
+                        <button class="detail-btn" onclick="showAdReasonDetail()">
+                            查看详细分析
+                        </button>
+                    </div>
                 </div>
             </div>
 
         </section>
 
-        <!-- 右侧：AI决策面板 -->
+        <!-- 右侧：AI决策面板/数据面板 -->
         <aside class="ai-panel">
             
+            <!-- 三方价值数据仪表板 -->
+            <div class="panel-card value-dashboard">
+                <div class="card-header">
+                    <i class="bi bi-graph-up-arrow"></i>
+                    <h3>三方价值对比</h3>
+                    <button class="refresh-btn" onclick="refreshDashboard()">
+                        <i class="bi bi-arrow-clockwise"></i>
+                    </button>
+                </div>
+
+                <div class="dashboard-tabs">
+                    <button class="tab-btn active" onclick="switchDashboardTab('user')">
+                        <i class="bi bi-person"></i>
+                        用户价值
+                    </button>
+                    <button class="tab-btn" onclick="switchDashboardTab('platform')">
+                        <i class="bi bi-building"></i>
+                        平台价值
+                    </button>
+                    <button class="tab-btn" onclick="switchDashboardTab('advertiser')">
+                        <i class="bi bi-megaphone"></i>
+                        广告主
+                    </button>
+                </div>
+
+                <div class="dashboard-content" id="dashboardContent">
+                    <!-- 用户价值 -->
+                    <div class="dashboard-panel active" id="userDashboard">
+                        <div class="metric-grid">
+                            <div class="metric-item">
+                                <div class="metric-icon user">
+                                    <i class="bi bi-emoji-smile"></i>
+                                </div>
+                                <div class="metric-data">
+                                    <div class="metric-label">体验满意度</div>
+                                    <div class="metric-value">
+                                        <span class="traditional-value">2.1/5</span>
+                                        <i class="bi bi-arrow-right"></i>
+                                        <span class="ai-value">4.3/5</span>
+                                        <span class="increase">+105%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="metric-item">
+                                <div class="metric-icon user">
+                                    <i class="bi bi-clock-history"></i>
+                                </div>
+                                <div class="metric-data">
+                                    <div class="metric-label">被打断次数</div>
+                                    <div class="metric-value">
+                                        <span class="traditional-value">8次/集</span>
+                                        <i class="bi bi-arrow-right"></i>
+                                        <span class="ai-value">3次/集</span>
+                                        <span class="decrease">-62%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="metric-item">
+                                <div class="metric-icon user">
+                                    <i class="bi bi-hand-thumbs-up"></i>
+                                </div>
+                                <div class="metric-data">
+                                    <div class="metric-label">广告相关性</div>
+                                    <div class="metric-value">
+                                        <span class="traditional-value">23%</span>
+                                        <i class="bi bi-arrow-right"></i>
+                                        <span class="ai-value">78%</span>
+                                        <span class="increase">+239%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="metric-item">
+                                <div class="metric-icon user">
+                                    <i class="bi bi-sliders"></i>
+                                </div>
+                                <div class="metric-data">
+                                    <div class="metric-label">用户控制感</div>
+                                    <div class="metric-value">
+                                        <span class="traditional-value">0%</span>
+                                        <i class="bi bi-arrow-right"></i>
+                                        <span class="ai-value">85%</span>
+                                        <span class="new-tag">新增</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 平台价值 -->
+                    <div class="dashboard-panel" id="platformDashboard">
+                        <div class="metric-grid">
+                            <div class="metric-item">
+                                <div class="metric-icon platform">
+                                    <i class="bi bi-play-circle"></i>
+                                </div>
+                                <div class="metric-data">
+                                    <div class="metric-label">广告完播率</div>
+                                    <div class="metric-value">
+                                        <span class="traditional-value">30%</span>
+                                        <i class="bi bi-arrow-right"></i>
+                                        <span class="ai-value">75%</span>
+                                        <span class="increase">+150%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="metric-item">
+                                <div class="metric-icon platform">
+                                    <i class="bi bi-currency-dollar"></i>
+                                </div>
+                                <div class="metric-data">
+                                    <div class="metric-label">广告收入</div>
+                                    <div class="metric-value">
+                                        <span class="traditional-value">100%</span>
+                                        <i class="bi bi-arrow-right"></i>
+                                        <span class="ai-value">118%</span>
+                                        <span class="increase">+18%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="metric-item">
+                                <div class="metric-icon platform">
+                                    <i class="bi bi-people"></i>
+                                </div>
+                                <div class="metric-data">
+                                    <div class="metric-label">用户留存率</div>
+                                    <div class="metric-value">
+                                        <span class="traditional-value">68%</span>
+                                        <i class="bi bi-arrow-right"></i>
+                                        <span class="ai-value">82%</span>
+                                        <span class="increase">+21%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="metric-item">
+                                <div class="metric-icon platform">
+                                    <i class="bi bi-graph-up"></i>
+                                </div>
+                                <div class="metric-data">
+                                    <div class="metric-label">会员转化率</div>
+                                    <div class="metric-value">
+                                        <span class="traditional-value">5.2%</span>
+                                        <i class="bi bi-arrow-right"></i>
+                                        <span class="ai-value">7.8%</span>
+                                        <span class="increase">+50%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 广告主价值 -->
+                    <div class="dashboard-panel" id="advertiserDashboard">
+                        <div class="metric-grid">
+                            <div class="metric-item">
+                                <div class="metric-icon advertiser">
+                                    <i class="bi bi-eye"></i>
+                                </div>
+                                <div class="metric-data">
+                                    <div class="metric-label">有效曝光率</div>
+                                    <div class="metric-value">
+                                        <span class="traditional-value">42%</span>
+                                        <i class="bi bi-arrow-right"></i>
+                                        <span class="ai-value">86%</span>
+                                        <span class="increase">+105%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="metric-item">
+                                <div class="metric-icon advertiser">
+                                    <i class="bi bi-cursor"></i>
+                                </div>
+                                <div class="metric-data">
+                                    <div class="metric-label">点击转化率</div>
+                                    <div class="metric-value">
+                                        <span class="traditional-value">1.2%</span>
+                                        <i class="bi bi-arrow-right"></i>
+                                        <span class="ai-value">3.8%</span>
+                                        <span class="increase">+217%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="metric-item">
+                                <div class="metric-icon advertiser">
+                                    <i class="bi bi-trophy"></i>
+                                </div>
+                                <div class="metric-data">
+                                    <div class="metric-label">ROI</div>
+                                    <div class="metric-value">
+                                        <span class="traditional-value">1:2.5</span>
+                                        <i class="bi bi-arrow-right"></i>
+                                        <span class="ai-value">1:4.2</span>
+                                        <span class="increase">+68%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="metric-item">
+                                <div class="metric-icon advertiser">
+                                    <i class="bi bi-heart"></i>
+                                </div>
+                                <div class="metric-data">
+                                    <div class="metric-label">品牌好感度</div>
+                                    <div class="metric-value">
+                                        <span class="traditional-value">-18分</span>
+                                        <i class="bi bi-arrow-right"></i>
+                                        <span class="ai-value">+12分</span>
+                                        <span class="increase">+167%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- 用户画像卡片 -->
             <div class="panel-card">
                 <div class="card-header">
@@ -205,8 +602,8 @@
                 </div>
             </div>
 
-            <!-- AI实时决策卡片 -->
-            <div class="panel-card decision-card">
+            <!-- AI实时决策卡片（仅AI模式） -->
+            <div class="panel-card decision-card ai-mode-only">
                 <div class="card-header">
                     <i class="bi bi-cpu"></i>
                     <h3>AI实时决策</h3>
@@ -250,7 +647,6 @@
                     </div>
                 </div>
 
-                <!-- 决策流程可视化 -->
                 <div class="decision-flow">
                     <div class="flow-step active">
                         <div class="flow-icon">1</div>
@@ -274,7 +670,37 @@
                 </div>
             </div>
 
-            <!-- 对比数据卡片 -->
+            <!-- 传统模式说明卡片（仅传统模式） -->
+            <div class="panel-card traditional-mode-only hidden">
+                <div class="card-header">
+                    <i class="bi bi-info-circle"></i>
+                    <h3>传统广告系统</h3>
+                </div>
+                <div class="traditional-info">
+                    <div class="info-item">
+                        <i class="bi bi-x-circle"></i>
+                        <span>每15分钟固定插播一次广告</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="bi bi-x-circle"></i>
+                        <span>不考虑剧情情绪状态</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="bi bi-x-circle"></i>
+                        <span>广告内容随机或按人群粗分</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="bi bi-x-circle"></i>
+                        <span>用户无法选择或跳过</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="bi bi-x-circle"></i>
+                        <span>广告时长固定60-90秒</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 对比表格 -->
             <div class="panel-card">
                 <div class="card-header">
                     <i class="bi bi-bar-chart"></i>
@@ -331,7 +757,7 @@
             </div>
 
             <!-- AI对话卡片 -->
-            <div class="panel-card chat-card">
+            <div class="panel-card chat-card ai-mode-only">
                 <div class="card-header">
                     <i class="bi bi-chat-dots"></i>
                     <h3>询问AI决策理由</h3>
@@ -350,7 +776,6 @@
                     </div>
                 </div>
                 
-                <!-- 快捷问题 -->
                 <div class="quick-questions">
                     <button class="quick-btn" onclick="askQuestion('为什么现在不放广告？')">
                         为什么现在不放广告？
@@ -363,7 +788,6 @@
                     </button>
                 </div>
 
-                <!-- 输入框 -->
                 <div class="chat-input-container">
                     <input 
                         type="text" 
@@ -386,18 +810,102 @@
     <footer class="footer">
         <div class="footer-content">
             <span>© 2024 AdSense·感知广告 | 腾讯PCG AI创造营参赛作品</span>
-            <span class="footer-links">
-                <a href="#" onclick="showInfo('tech')">技术架构</a>
-                <a href="#" onclick="showInfo('about')">关于项目</a>
+            <span class="footer-stats">
+                <span class="stat">
+                    <i class="bi bi-people"></i>
+                    用户满意度提升 <strong>105%</strong>
+                </span>
+                <span class="stat">
+                    <i class="bi bi-graph-up"></i>
+                    广告完播率提升 <strong>150%</strong>
+                </span>
+                <span class="stat">
+                    <i class="bi bi-trophy"></i>
+                    ROI提升 <strong>68%</strong>
+                </span>
             </span>
         </div>
     </footer>
 
-    <!-- 模态窗口 -->
-    <div class="modal hidden" id="modal">
+    <!-- 模态窗口：广告选择器 -->
+    <div class="modal hidden" id="adSelectorModal">
         <div class="modal-content">
-            <span class="modal-close" onclick="closeModal()">&times;</span>
-            <div id="modalBody"></div>
+            <span class="modal-close" onclick="closeAdSelector()">&times;</span>
+            <div class="modal-header">
+                <i class="bi bi-collection-play"></i>
+                <h2>选择你感兴趣的广告类型</h2>
+                <p>选择后可换取15分钟免广告观看</p>
+            </div>
+            <div class="ad-type-grid">
+                <div class="ad-type-card" onclick="selectAdType('food')">
+                    <i class="bi bi-cup-hot"></i>
+                    <h4>美食餐饮</h4>
+                    <p>外卖、餐厅、零食</p>
+                </div>
+                <div class="ad-type-card" onclick="selectAdType('game')">
+                    <i class="bi bi-controller"></i>
+                    <h4>游戏娱乐</h4>
+                    <p>手游、主机、电竞</p>
+                </div>
+                <div class="ad-type-card" onclick="selectAdType('digital')">
+                    <i class="bi bi-phone"></i>
+                    <h4>数码科技</h4>
+                    <p>手机、电脑、智能设备</p>
+                </div>
+                <div class="ad-type-card" onclick="selectAdType('beauty')">
+                    <i class="bi bi-heart"></i>
+                    <h4>美妆时尚</h4>
+                    <p>化妆品、服饰、配饰</p>
+                </div>
+                <div class="ad-type-card" onclick="selectAdType('travel')">
+                    <i class="bi bi-airplane"></i>
+                    <h4>旅游出行</h4>
+                    <p>酒店、机票、景点</p>
+                </div>
+                <div class="ad-type-card" onclick="selectAdType('education')">
+                    <i class="bi bi-book"></i>
+                    <h4>教育培训</h4>
+                    <p>课程、考证、技能</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态窗口：互动答题 -->
+    <div class="modal hidden" id="quizModal">
+        <div class="modal-content quiz-modal">
+            <span class="modal-close" onclick="closeQuiz()">&times;</span>
+            <div class="modal-header">
+                <i class="bi bi-trophy"></i>
+                <h2>互动答题</h2>
+                <p>答对可减少30秒广告时长</p>
+            </div>
+            <div class="quiz-content">
+                <div class="quiz-question">
+                    <h3>美团外卖的"神券节"活动最高可减免多少元？</h3>
+                </div>
+                <div class="quiz-options">
+                    <button class="quiz-option" onclick="answerQuiz('A')">A. 10元</button>
+                    <button class="quiz-option" onclick="answerQuiz('B')">B. 15元</button>
+                    <button class="quiz-option correct" onclick="answerQuiz('C')">C. 20元</button>
+                    <button class="quiz-option" onclick="answerQuiz('D')">D. 25元</button>
+                </div>
+                <div class="quiz-timer">
+                    剩余时间：<span id="quizTimer">10</span>秒
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态窗口：广告详细分析 -->
+    <div class="modal hidden" id="adReasonModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeAdReasonDetail()">&times;</span>
+            <div class="modal-header">
+                <i class="bi bi-lightbulb"></i>
+                <h2>AI匹配详细分析</h2>
+            </div>
+            <div id="adReasonDetailContent"></div>
         </div>
     </div>
 
@@ -407,6 +915,7 @@
     <script src="js/scenes.js"></script>
     <script src="js/coze-api.js"></script>
     <script src="js/ui-controller.js"></script>
+    <script src="js/mode-controller.js"></script>
     <script src="js/main.js"></script>
 
 </body>
