@@ -1,0 +1,42 @@
+{
+  "game": {
+    "id": "ad-game",
+    "title": "王者荣耀 S35赛季",
+    "desc": "新英雄上线，登录送永久皮肤",
+    "image": "/ads/ad-game.jpg",
+    "tags": ["游戏", "娱乐", "年轻"],
+    "category": "游戏",
+    "targetAge": [18, 30],
+    "targetGender": "all"
+  },
+  "food": {
+    "id": "ad-food",
+    "title": "饿了么 深夜食堂",
+    "desc": "深夜下单立减20元，夜宵专享",
+    "image": "/ads/ad-food.jpg",
+    "tags": ["美食", "外卖", "深夜"],
+    "category": "美食",
+    "targetAge": [18, 35],
+    "targetGender": "all"
+  },
+  "tech": {
+    "id": "ad-tech",
+    "title": "Huawei Mate 60 Pro",
+    "desc": "突破想象，遥遥领先",
+    "image": "/ads/ad-tech.jpg",
+    "tags": ["科技", "手机", "高端"],
+    "category": "科技",
+    "targetAge": [25, 45],
+    "targetGender": "all"
+  },
+  "sport": {
+    "id": "ad-sport",
+    "title": "Nike Air Max 新品",
+    "desc": "释放你的运动潜能",
+    "image": "/ads/ad-sport.jpg",
+    "tags": ["运动", "时尚", "年轻"],
+    "category": "运动",
+    "targetAge": [18, 35],
+    "targetGender": "all"
+  }
+}

@@ -1,0 +1,191 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2025-04-22T00:00:00.000Z",
+  "model": "qwen3:14b",
+  "analysisStats": {
+    "total": 3,
+    "ollamaSuccess": 0,
+    "fallbackUsed": 3
+  },
+  "userProfile": {
+    "age": 22,
+    "gender": "男",
+    "interests": ["游戏", "科技", "剧集"],
+    "viewTime": "深夜",
+    "device": "手机",
+    "membership": "免费用户"
+  },
+  "adDatabase": {
+    "game": {
+      "id": "ad-game",
+      "title": "王者荣耀 S35赛季",
+      "desc": "新英雄上线，登录送永久皮肤",
+      "image": "/ads/ad-game.jpg",
+      "tags": ["游戏", "娱乐", "年轻"],
+      "category": "游戏"
+    },
+    "food": {
+      "id": "ad-food",
+      "title": "饿了么 深夜食堂",
+      "desc": "深夜下单立减20元，夜宵专享",
+      "image": "/ads/ad-food.jpg",
+      "tags": ["美食", "外卖", "深夜"],
+      "category": "美食"
+    },
+    "tech": {
+      "id": "ad-tech",
+      "title": "Huawei Mate 60 Pro",
+      "desc": "突破想象，遥遥领先",
+      "image": "/ads/ad-tech.jpg",
+      "tags": ["科技", "手机", "高端"],
+      "category": "科技"
+    },
+    "sport": {
+      "id": "ad-sport",
+      "title": "Nike Air Max 新品",
+      "desc": "释放你的运动潜能",
+      "image": "/ads/ad-sport.jpg",
+      "tags": ["运动", "时尚", "年轻"],
+      "category": "运动"
+    }
+  },
+  "scenes": {
+    "scene-high": {
+      "metadata": {
+        "id": "scene-high",
+        "name": "高潮场景",
+        "description": "范闲与庆帝对峙，生死一线",
+        "videoPath": "/videos/scene-high.mp4",
+        "analyzedAt": "2025-04-22T00:00:00.000Z"
+      },
+      "emotion": 87,
+      "emotionLabel": "高度紧张",
+      "emotionColor": "#ff4444",
+      "factors": {
+        "sceneType": "对抗冲突",
+        "visualTone": "暗色调",
+        "pace": "快节奏",
+        "relationship": "敌对"
+      },
+      "reasoning": "检测到剧情高潮场景，范闲与庆帝处于生死对峙状态。画面采用暗色调突出紧张氛围，快速剪辑配合紧张配乐（约92 BPM），角色对话充满对抗性。用户此时完全沉浸在剧情中，注意力高度集中，任何打断都会造成极差体验。",
+      "decision": {
+        "action": "delay",
+        "actionLabel": "🛡️ 延迟插入",
+        "reason": "当前情绪强度高达87分，用户正处于剧情最紧张时刻。此时插入广告会导致用户体验满意度下降68%，广告完播率仅28%，跳过率高达72%，且会严重损害品牌好感度。AI决策延迟广告至下一个情绪低谷点，预计在3分钟后。",
+        "timing": 180,
+        "nextCheck": 30
+      },
+      "adRecommendation": {
+        "selectedId": "ad-game",
+        "selectedTitle": "王者荣耀 S35赛季",
+        "matchingScore": 0.89,
+        "matchingReason": "用户画像深度匹配：22岁男性，兴趣包含游戏，深夜时段为游戏玩家活跃高峰期。但需等待情绪降低后投放，预期点击率3.2%，转化率提升45%。",
+        "alternatives": ["ad-food", "ad-tech"]
+      },
+      "traditional": {
+        "action": "insert",
+        "timing": 5,
+        "adId": "random",
+        "reason": "传统系统在第5秒固定插入随机广告，无视用户情绪状态"
+      }
+    },
+    "scene-normal": {
+      "metadata": {
+        "id": "scene-normal",
+        "name": "日常场景",
+        "description": "范闲与王启年闲聊日常",
+        "videoPath": "/videos/scene-normal.mp4",
+        "analyzedAt": "2025-04-22T00:00:00.000Z"
+      },
+      "emotion": 42,
+      "emotionLabel": "情绪平稳",
+      "emotionColor": "#ffaa00",
+      "factors": {
+        "sceneType": "日常对话",
+        "visualTone": "正常色调",
+        "pace": "中等节奏",
+        "relationship": "友好"
+      },
+      "reasoning": "剧情处于过渡期，范闲与王启年进行日常对话。画面正常色调，中等节奏，角色关系轻松友好。用户注意力处于中等水平，可以接受适度打断。",
+      "decision": {
+        "action": "insert",
+        "actionLabel": "✅ 插入互动广告",
+        "reason": "情绪强度42分，剧情平稳。建议采用互动式广告：用户可答题减少观看时长，这种参与感可提升广告接受度47%。预期完播率68%。",
+        "timing": 6,
+        "nextCheck": null
+      },
+      "adRecommendation": {
+        "selectedId": "ad-game",
+        "selectedTitle": "王者荣耀 S35赛季",
+        "matchingScore": 0.92,
+        "matchingReason": "用户兴趣标签'游戏'匹配度100%，深夜时段游戏广告点击率比白天高65%。预期点击率3.2%，转化率2.1%。",
+        "alternatives": ["ad-tech", "ad-food"]
+      },
+      "traditional": {
+        "action": "insert",
+        "timing": 5,
+        "adId": "random",
+        "reason": "传统系统固定5秒插入，随机广告"
+      }
+    },
+    "scene-relax": {
+      "metadata": {
+        "id": "scene-relax",
+        "name": "轻松场景",
+        "description": "王启年搞笑片段",
+        "videoPath": "/videos/scene-relax.mp4",
+        "analyzedAt": "2025-04-22T00:00:00.000Z"
+      },
+      "emotion": 18,
+      "emotionLabel": "轻松惬意",
+      "emotionColor": "#44bb44",
+      "factors": {
+        "sceneType": "搞笑轻松",
+        "visualTone": "明亮色调",
+        "pace": "慢节奏",
+        "relationship": "友好"
+      },
+      "reasoning": "王启年搞笑片段刚结束，用户心情愉悦放松。明亮色调，节奏舒缓，用户处于情绪释放后的愉悦状态，对外界信息接受度最高。",
+      "decision": {
+        "action": "insert",
+        "actionLabel": "✅ 最佳时机",
+        "reason": "完美时机！情绪强度仅18分，用户处于'愉悦后开放窗口期'，对广告抵触情绪最低。深夜时段结合轻松氛围，外卖广告转化率比平均提升60%。",
+        "timing": 7,
+        "nextCheck": null
+      },
+      "adRecommendation": {
+        "selectedId": "ad-food",
+        "selectedTitle": "饿了么 深夜食堂",
+        "matchingScore": 0.95,
+        "matchingReason": "完美匹配：深夜23:30 + 轻松愉悦 + 饥饿感。预期点击率4.1%，转化率2.8%，ROI提升60%。",
+        "alternatives": ["ad-game"]
+      },
+      "traditional": {
+        "action": "insert",
+        "timing": 5,
+        "adId": "random",
+        "reason": "传统系统固定5秒插入，可能错失深夜美食广告的黄金时机"
+      }
+    }
+  },
+  "comparisonMetrics": {
+    "traditional": {
+      "completionRate": 28,
+      "satisfaction": 2.1,
+      "clickRate": 0.8,
+      "churnRate": 18
+    },
+    "ai": {
+      "completionRate": 76,
+      "satisfaction": 4.3,
+      "clickRate": 3.2,
+      "churnRate": 5
+    },
+    "improvement": {
+      "completionRate": 171,
+      "satisfaction": 105,
+      "clickRate": 300,
+      "churnRate": -72
+    }
+  }
+}
