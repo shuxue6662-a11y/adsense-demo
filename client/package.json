@@ -9,9 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
+    "video.js": "^8.10.0",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0",
-    "video.js": "^8.10.0"
+    "vue-router": "^4.3.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",

@@ -5,10 +5,13 @@
         <component :is="Component" />
       </transition>
     </router-view>
+    <Analytics />
   </div>
 </template>
 
 <script setup>
+import { Analytics } from '@vercel/analytics/vue';
+
 // App根组件
 </script>
 
