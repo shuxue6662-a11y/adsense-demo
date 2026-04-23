@@ -223,7 +223,7 @@
     <!-- 页脚 -->
     <footer class="bg-white border-t border-gray-200 py-6 mt-20">
       <div class="container mx-auto px-4 text-center text-sm text-gray-600">
-        <p>腾讯PCG AI创造营 · 决赛作品</p>
+        <p>腾讯PCG AI产品大赛</p>
         <p class="mt-1">AdSense感知广告 - 让AI替用户守住那道门</p>
       </div>
     </footer>
