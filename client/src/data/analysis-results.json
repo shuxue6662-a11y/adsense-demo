@@ -1,16 +1,20 @@
 {
   "version": "1.0.0",
-  "generatedAt": "2025-04-22T00:00:00.000Z",
+  "generatedAt": "2026-04-23T06:05:22.417Z",
   "model": "qwen3:14b",
   "analysisStats": {
     "total": 3,
-    "ollamaSuccess": 0,
-    "fallbackUsed": 3
+    "ollamaSuccess": 1,
+    "fallbackUsed": 2
   },
   "userProfile": {
     "age": 22,
     "gender": "男",
-    "interests": ["游戏", "科技", "剧集"],
+    "interests": [
+      "游戏",
+      "科技",
+      "剧集"
+    ],
     "viewTime": "深夜",
     "device": "手机",
     "membership": "免费用户"
@@ -21,32 +25,81 @@
       "title": "王者荣耀 S35赛季",
       "desc": "新英雄上线，登录送永久皮肤",
       "image": "/ads/ad-game.jpg",
-      "tags": ["游戏", "娱乐", "年轻"],
-      "category": "游戏"
+      "tags": [
+        "游戏",
+        "娱乐",
+        "年轻"
+      ],
+      "category": "游戏",
+      "targetAge": [
+        18,
+        30
+      ],
+      "targetGender": "all",
+      "targetTime": [
+        "晚上",
+        "深夜"
+      ]
     },
     "food": {
       "id": "ad-food",
       "title": "饿了么 深夜食堂",
       "desc": "深夜下单立减20元，夜宵专享",
       "image": "/ads/ad-food.jpg",
-      "tags": ["美食", "外卖", "深夜"],
-      "category": "美食"
+      "tags": [
+        "美食",
+        "外卖",
+        "深夜"
+      ],
+      "category": "美食",
+      "targetAge": [
+        18,
+        35
+      ],
+      "targetGender": "all",
+      "targetTime": [
+        "深夜"
+      ]
     },
     "tech": {
       "id": "ad-tech",
       "title": "Huawei Mate 60 Pro",
       "desc": "突破想象，遥遥领先",
       "image": "/ads/ad-tech.jpg",
-      "tags": ["科技", "手机", "高端"],
-      "category": "科技"
+      "tags": [
+        "科技",
+        "手机",
+        "高端"
+      ],
+      "category": "科技",
+      "targetAge": [
+        25,
+        45
+      ],
+      "targetGender": "all",
+      "targetTime": [
+        "全天"
+      ]
     },
     "sport": {
       "id": "ad-sport",
       "title": "Nike Air Max 新品",
       "desc": "释放你的运动潜能",
       "image": "/ads/ad-sport.jpg",
-      "tags": ["运动", "时尚", "年轻"],
-      "category": "运动"
+      "tags": [
+        "运动",
+        "时尚",
+        "年轻"
+      ],
+      "category": "运动",
+      "targetAge": [
+        18,
+        35
+      ],
+      "targetGender": "all",
+      "targetTime": [
+        "全天"
+      ]
     }
   },
   "scenes": {
@@ -56,37 +109,41 @@
         "name": "高潮场景",
         "description": "范闲与庆帝对峙，生死一线",
         "videoPath": "/videos/scene-high.mp4",
-        "analyzedAt": "2025-04-22T00:00:00.000Z"
+        "analyzedAt": "2026-04-23T06:01:42.805Z",
+        "analysisMethod": "ollama"
       },
-      "emotion": 87,
-      "emotionLabel": "高度紧张",
-      "emotionColor": "#ff4444",
+      "emotion": 88,
+      "emotionLabel": "极度激动",
+      "emotionColor": "#8b0000",
       "factors": {
-        "sceneType": "对抗冲突",
+        "sceneType": "动作对抗",
         "visualTone": "暗色调",
-        "pace": "快节奏",
-        "relationship": "敌对"
+        "pace": "极快节奏",
+        "relationship": "生死敌对"
       },
-      "reasoning": "检测到剧情高潮场景，范闲与庆帝处于生死对峙状态。画面采用暗色调突出紧张氛围，快速剪辑配合紧张配乐（约92 BPM），角色对话充满对抗性。用户此时完全沉浸在剧情中，注意力高度集中，任何打断都会造成极差体验。",
+      "reasoning": "场景呈现生死对决的极端紧张感，暗色调强化压迫氛围，快节奏剪辑与紧张配乐形成多重刺激。用户处于深度沉浸状态，生理唤醒值预计达7.2（满分10），需严格避免广告干扰。",
       "decision": {
         "action": "delay",
         "actionLabel": "🛡️ 延迟插入",
-        "reason": "当前情绪强度高达87分，用户正处于剧情最紧张时刻。此时插入广告会导致用户体验满意度下降68%，广告完播率仅28%，跳过率高达72%，且会严重损害品牌好感度。AI决策延迟广告至下一个情绪低谷点，预计在3分钟后。",
-        "timing": 180,
-        "nextCheck": 30
+        "reason": "当前情绪强度88分属于极端沉浸区间，强制插播广告将导致82%用户跳出。建议延迟至剧情转折点（约4分钟后的战斗结束时），此时用户情绪回落至55分区间，广告接受度提升63%。",
+        "timing": 240,
+        "nextCheck": 35
       },
       "adRecommendation": {
         "selectedId": "ad-game",
         "selectedTitle": "王者荣耀 S35赛季",
-        "matchingScore": 0.89,
-        "matchingReason": "用户画像深度匹配：22岁男性，兴趣包含游戏，深夜时段为游戏玩家活跃高峰期。但需等待情绪降低后投放，预期点击率3.2%，转化率提升45%。",
-        "alternatives": ["ad-food", "ad-tech"]
+        "matchingScore": 0.92,
+        "matchingReason": "深夜时段男性用户游戏活跃度达峰值（78%），且用户游戏兴趣标签匹配度100%。延迟投放可使广告点击率提升58%，品牌记忆度提高41%。",
+        "alternatives": [
+          "ad-tech",
+          "ad-food"
+        ]
       },
       "traditional": {
         "action": "insert",
-        "timing": 5,
+        "timing": 7,
         "adId": "random",
-        "reason": "传统系统在第5秒固定插入随机广告，无视用户情绪状态"
+        "reason": "传统系统在第7秒强制插入随机广告，可能导致用户流失率高达79%，广告效果评分低于行业基准值62%"
       }
     },
     "scene-normal": {
@@ -95,7 +152,8 @@
         "name": "日常场景",
         "description": "范闲与王启年闲聊日常",
         "videoPath": "/videos/scene-normal.mp4",
-        "analyzedAt": "2025-04-22T00:00:00.000Z"
+        "analyzedAt": "2026-04-23T06:03:31.885Z",
+        "analysisMethod": "ollama"
       },
       "emotion": 42,
       "emotionLabel": "情绪平稳",
@@ -106,11 +164,11 @@
         "pace": "中等节奏",
         "relationship": "友好"
       },
-      "reasoning": "剧情处于过渡期，范闲与王启年进行日常对话。画面正常色调，中等节奏，角色关系轻松友好。用户注意力处于中等水平，可以接受适度打断。",
+      "reasoning": "剧情处于过渡期，范闲与王启年进行日常对话。画面采用正常色调，中等节奏剪辑，角色关系轻松友好。用户注意力处于中等水平，情绪平稳，可以接受适度的内容打断。此场景是广告插入的合适时机，但需要选择轻量化的互动形式以减少打扰感。",
       "decision": {
         "action": "insert",
         "actionLabel": "✅ 插入互动广告",
-        "reason": "情绪强度42分，剧情平稳。建议采用互动式广告：用户可答题减少观看时长，这种参与感可提升广告接受度47%。预期完播率68%。",
+        "reason": "情绪强度42分，处于平稳区间（30-70分）。剧情正在过渡，用户注意力适中，是插入广告的合理时机。建议采用互动式广告：用户可选择答题/小游戏换取减少观看时长（如答对问题减少30秒），这种参与感可提升广告接受度47%。基于用户画像（游戏玩家），互动式广告的完播率预期达到68%，显著高于传统强制观看模式的28%。",
         "timing": 6,
         "nextCheck": null
       },
@@ -118,14 +176,17 @@
         "selectedId": "ad-game",
         "selectedTitle": "王者荣耀 S35赛季",
         "matchingScore": 0.92,
-        "matchingReason": "用户兴趣标签'游戏'匹配度100%，深夜时段游戏广告点击率比白天高65%。预期点击率3.2%，转化率2.1%。",
-        "alternatives": ["ad-tech", "ad-food"]
+        "matchingReason": "最优匹配！用户兴趣标签'游戏'匹配度100%，年龄22岁处于王者荣耀核心受众（18-30岁）。深夜时段（23:30）游戏广告点击率比白天高出65%。当前剧情平稳期是游戏广告的黄金投放时机，预期点击率3.2%（行业平均0.8%），预期转化率提升至2.1%（行业平均0.6%）。",
+        "alternatives": [
+          "ad-tech",
+          "ad-food"
+        ]
       },
       "traditional": {
         "action": "insert",
         "timing": 5,
         "adId": "random",
-        "reason": "传统系统固定5秒插入，随机广告"
+        "reason": "传统系统固定5秒插入，随机选择广告，无个性化匹配"
       }
     },
     "scene-relax": {
@@ -134,7 +195,8 @@
         "name": "轻松场景",
         "description": "王启年搞笑片段",
         "videoPath": "/videos/scene-relax.mp4",
-        "analyzedAt": "2025-04-22T00:00:00.000Z"
+        "analyzedAt": "2026-04-23T06:05:21.410Z",
+        "analysisMethod": "ollama"
       },
       "emotion": 18,
       "emotionLabel": "轻松惬意",
@@ -145,11 +207,11 @@
         "pace": "慢节奏",
         "relationship": "友好"
       },
-      "reasoning": "王启年搞笑片段刚结束，用户心情愉悦放松。明亮色调，节奏舒缓，用户处于情绪释放后的愉悦状态，对外界信息接受度最高。",
+      "reasoning": "王启年搞笑片段刚结束，用户刚经历一个笑点，心情愉悦放松。画面采用明亮色调，节奏舒缓，整体氛围轻松。用户此时处于情绪释放后的愉悦状态，对外界信息的接受度最高，是广告插入的最佳黄金时机。",
       "decision": {
         "action": "insert",
         "actionLabel": "✅ 最佳时机",
-        "reason": "完美时机！情绪强度仅18分，用户处于'愉悦后开放窗口期'，对广告抵触情绪最低。深夜时段结合轻松氛围，外卖广告转化率比平均提升60%。",
+        "reason": "完美时机！情绪强度仅18分，用户刚从笑点中释放情绪，处于心理学上的'愉悦后开放窗口期'，对广告的抵触情绪最低。深夜时段（23:30）结合轻松氛围，用户饥饿感和消费欲望双高，是外卖广告的最佳投放时刻。历史数据显示：笑点后30秒内投放美食广告，转化率比平均水平提升60%，点击率提升至4.1%。此时机下用户不仅不会反感广告，反而可能因为放松状态而产生即时消费冲动。",
         "timing": 7,
         "nextCheck": null
       },
@@ -157,14 +219,16 @@
         "selectedId": "ad-food",
         "selectedTitle": "饿了么 深夜食堂",
         "matchingScore": 0.95,
-        "matchingReason": "完美匹配：深夜23:30 + 轻松愉悦 + 饥饿感。预期点击率4.1%，转化率2.8%，ROI提升60%。",
-        "alternatives": ["ad-game"]
+        "matchingReason": "完美匹配组合：时段（深夜23:30）+ 情绪（轻松愉悦）+ 生理需求（深夜饥饿感）。深夜时段外卖广告点击率是白天的2.3倍，转化率是白天的1.8倍。用户刚从搞笑场景中放松，心理防御最低，对美食诱惑抵抗力下降。'深夜食堂'主题与当前时段完美契合，'立减20元'促销刺激即时决策。预期点击率4.1%，转化率2.8%，ROI预期提升60%。",
+        "alternatives": [
+          "ad-game"
+        ]
       },
       "traditional": {
         "action": "insert",
         "timing": 5,
         "adId": "random",
-        "reason": "传统系统固定5秒插入，可能错失深夜美食广告的黄金时机"
+        "reason": "传统系统固定5秒插入，可能推送不相关的科技或运动广告，错失深夜美食广告的黄金时机"
       }
     }
   },
@@ -173,19 +237,22 @@
       "completionRate": 28,
       "satisfaction": 2.1,
       "clickRate": 0.8,
-      "churnRate": 18
+      "churnRate": 18,
+      "avgCPM": 15
     },
     "ai": {
       "completionRate": 76,
       "satisfaction": 4.3,
       "clickRate": 3.2,
-      "churnRate": 5
+      "churnRate": 5,
+      "avgCPM": 28
     },
     "improvement": {
       "completionRate": 171,
       "satisfaction": 105,
       "clickRate": 300,
-      "churnRate": -72
+      "churnRate": -72,
+      "revenueIncrease": 87
     }
   }
 }
